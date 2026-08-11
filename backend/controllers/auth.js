@@ -164,6 +164,9 @@ export const forgotPassword = async (req, res) => {
     user.resetPasswordExpires = undefined;
     await user.save();
 
+    console.log('Forgot password request for:', normalizedEmail);
+    console.log('Using email host:', process.env.EMAIL_HOST, 'port:', process.env.EMAIL_PORT, 'secure:', process.env.EMAIL_SECURE);
+
     await sendEmail(
       normalizedEmail,
       'Password Reset OTP',
