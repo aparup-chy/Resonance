@@ -76,6 +76,10 @@ router.post('/auth/forgot-password', (req, res) => {
   // res.status(200).json({ message: 'Forgot password route' });
 });
 
+router.post('/auth/verify-otp', (req, res) => {
+  authController.verifyOtp(req, res);
+});
+
 router.post('/auth/reset-password', (req, res) => {
   authController.resetPassword(req, res);
   // res.status(200).json({ message: 'Reset password route' });

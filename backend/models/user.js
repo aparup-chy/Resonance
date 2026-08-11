@@ -33,6 +33,8 @@ const UserSchema = new mongoose.Schema({
     emailVerificationToken: String,
     resetPasswordToken: String,
     resetPasswordExpires: Date,
+    resetPasswordOtp: String,
+    resetPasswordOtpExpires: Date,
     // Points system fields
     points: {
       total: {

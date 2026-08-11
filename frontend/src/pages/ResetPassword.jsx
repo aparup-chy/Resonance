@@ -6,23 +6,21 @@ import api from '../api/axios';
 import Navbar from '../components/Navbar';
 
 function ResetPassword() {
-  console.log('ResetPassword component rendered');
   const { register, handleSubmit, formState: { errors }, watch } = useForm();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const onSubmit = async (data) => {
-    const params = new URLSearchParams(location.search);
-    const token = params.get('token');
-    
-    if (!token) {
-      toast.error('Reset token is missing');
-      return;
-    }
-    
     setIsLoading(true);
     try {
+      const token = new URLSearchParams(location.search).get('token');
+      if (!token) {
+        toast.error('Reset token is missing');
+        setIsLoading(false);
+        return;
+      }
+
       await api.post('/auth/reset-password', {
         token,
         password: data.password
@@ -42,16 +40,15 @@ function ResetPassword() {
       <div className="flex-1 flex justify-center items-center px-4">
         <div className="bg-black/70 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-full max-w-md border border-white/30 text-white">
           <h1 className="text-center text-3xl font-bold mb-8">Reset Password</h1>
-          
+
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+
             <div className="flex flex-col gap-2">
-              <label htmlFor="password" className="font-medium">
-                New Password
-              </label>
+              <label htmlFor="password" className="font-medium">New Password</label>
               <input
                 type="password"
                 id="password"
-                {...register('password', { 
+                {...register('password', {
                   required: 'Password is required',
                   minLength: {
                     value: 6,
@@ -63,19 +60,15 @@ function ResetPassword() {
                 }`}
                 placeholder="Enter new password"
               />
-              {errors.password && (
-                <span className="text-red-400 text-sm font-semibold">{errors.password.message}</span>
-              )}
+              {errors.password && <span className="text-red-400 text-sm font-semibold">{errors.password.message}</span>}
             </div>
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="confirmPassword" className="font-medium">
-                Confirm Password
-              </label>
+              <label htmlFor="confirmPassword" className="font-medium">Confirm Password</label>
               <input
                 type="password"
                 id="confirmPassword"
-                {...register('confirmPassword', { 
+                {...register('confirmPassword', {
                   required: 'Please confirm your password',
                   validate: value => value === watch('password') || 'Passwords do not match'
                 })}
@@ -84,9 +77,7 @@ function ResetPassword() {
                 }`}
                 placeholder="Confirm new password"
               />
-              {errors.confirmPassword && (
-                <span className="text-red-400 text-sm font-semibold">{errors.confirmPassword.message}</span>
-              )}
+              {errors.confirmPassword && <span className="text-red-400 text-sm font-semibold">{errors.confirmPassword.message}</span>}
             </div>
 
             <button
@@ -96,14 +87,9 @@ function ResetPassword() {
             >
               {isLoading ? 'Resetting...' : 'Reset Password'}
             </button>
-            
+
             <div className="text-center mt-4">
-              <Link 
-                to="/login" 
-                className="text-white/80 hover:text-white transition-colors"
-              >
-                Back to Login
-              </Link>
+              <Link to="/login" className="text-white/80 hover:text-white transition-colors">Back to Login</Link>
             </div>
           </form>
         </div>

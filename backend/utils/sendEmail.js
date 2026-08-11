@@ -1,7 +1,7 @@
 // utils/sendEmail.js
 import nodemailer from 'nodemailer';
 
-const sendEmail = async (to, subject, text) => {
+const sendEmail = async (to, subject, text, html) => {
   try {
     // Create transporter
     const transporter = nodemailer.createTransport({
@@ -14,13 +14,17 @@ const sendEmail = async (to, subject, text) => {
       }
     });
 
-    // Send email
-    const info = await transporter.sendMail({
+    // Send email (use html when provided)
+    const mailOptions = {
       from: `"${process.env.EMAIL_FROM_NAME}" <${process.env.EMAIL_FROM}>`,
       to,
       subject,
       text
-    });
+    };
+
+    if (html) mailOptions.html = html;
+
+    const info = await transporter.sendMail(mailOptions);
 
     console.log(`Email sent: ${info.messageId}`);
     return info;
